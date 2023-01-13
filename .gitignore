@@ -1,0 +1,9 @@
+dwm
+*.o
+.ccls-cache/
+compile_commands.json
+.cache
+statusbar/temp
+result/
+.history/
+.vscode/
