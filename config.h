@@ -56,19 +56,21 @@ static const char scratchpadname[] = "scratchpad";
 //     对应的tag序号以及快捷键:   0:1  1:2  2:3  3:4  4:5  5:9  6:c  7:m  8:0  9:w 10:l
 //     "", "", ""
 static const char *tags[] = { "", "", "", "", "", "","","","","","","ﬄ"};
+
+#include "themes/onedark.h"
 static const char *tagsel[][2] = {
-	{ "#ffffff", "#ff0000" },
-	{ "#ffffff", "#ff7f00" },
-	{ "#000000", "#ffff00" },
-	{ "#000000", "#00ff00" },
-	{ "#ffffff", "#0000ff" },
-	{ "#ffffff", "#4b0082" },
-	{ "#ffffff", "#9400d3" },
-	{ "#000000", "#ffffff" },
-	{ "#ffffff", "#000000" },
-	{ "#ffffff", "#000000" },
-	{ "#ffffff", "#000000" },
-	{ "#ffffff", "#000000" },
+	{ black  , gray3 } ,
+	{ blue   , gray3 } ,
+	{ white  , gray3 } ,
+	{ red    , gray3 } ,
+	{ orange , gray3 } ,
+	{ red    , gray3 } ,
+	{ green  , gray3 } ,
+	{ pink   , gray3 } ,
+	{ green  , gray3 } ,
+	{ red    , gray3 } ,
+	{ green  , gray3 } ,
+	{ red    , gray3 } ,
 };
 static const unsigned int tagalpha[] = { OPAQUE, baralpha };
 
