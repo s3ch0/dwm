@@ -1,26 +1,26 @@
 #include <X11/XF86keysym.h>
 
-static int showsystray                   = 1;         /* 是否显示托盘栏 */
-static const int newclientathead         = 0;         /* 定义新窗口在栈顶还是栈底 */
-static const unsigned int borderpx       = 2;         /* 窗口边框大小 */
-static const unsigned int systraypinning = 1;         /* 托盘跟随的显示器 0代表不指定显示器 */
-static const unsigned int systrayspacing = 1;         /* 托盘间距 */
-static const unsigned int systrayspadding = 5;        /* 托盘和状态栏的间隙 */
-static int gappi                         = 2;        /* 窗口与窗口 缝隙大小 */
-static int gappo                         = 8;        /* 窗口与边缘 缝隙大小 */
-static const int _gappo                  = 8;        /* 窗口与窗口 缝隙大小 不可变 用于恢复时的默认值 */
-static const int _gappi                  = 8;        /* 窗口与边缘 缝隙大小 不可变 用于恢复时的默认值 */
-static const int vertpad                 = 5;         /* vertical padding of bar */
-static const int sidepad                 = 5;         /* horizontal padding of bar */
-static const int overviewgappi           = 24;        /* overview时 窗口与边缘 缝隙大小 */
-static const int overviewgappo           = 50;        /* overview时 窗口与窗口 缝隙大小 */
-static const int showbar                 = 1;         /* 是否显示状态栏 */
-static const int topbar                  = 1;         /* 指定状态栏位置 0底部 1顶部 */
-static const float mfact                 = 0.6;       /* 主工作区 大小比例 */
-static const int   nmaster               = 1;         /* 主工作区 窗口数量 */
-static const unsigned int snap           = 10;        /* 边缘依附宽度 */
-static const unsigned int baralpha       = 0xc0;      /* 状态栏透明度 */
-static const unsigned int borderalpha    = 0xdd;      /* 边框透明度 */
+static int showsystray                   = 1;    /* 是否显示托盘栏 */
+static const int newclientathead         = 0;    /* 定义新窗口在栈顶还是栈底 */
+static const unsigned int borderpx       = 2;    /* 窗口边框大小 */
+static const unsigned int systraypinning = 1;    /* 托盘跟随的显示器 0代表不指定显示器 */
+static const unsigned int systrayspacing = 1;    /* 托盘间距 */
+static const unsigned int systrayspadding = 5;   /* 托盘和状态栏的间隙 */
+static int gappi                         = 2;    /* 窗口与窗口 缝隙大小 */
+static int gappo                         = 8;    /* 窗口与边缘 缝隙大小 */
+static const int _gappo                  = 8;    /* 窗口与窗口 缝隙大小 不可变 用于恢复时的默认值 */
+static const int _gappi                  = 8;    /* 窗口与边缘 缝隙大小 不可变 用于恢复时的默认值 */
+static const int vertpad                 = 5;    /* vertical padding of bar */
+static const int sidepad                 = 5;    /* horizontal padding of bar */
+static const int overviewgappi           = 24;   /* overview时 窗口与边缘 缝隙大小 */
+static const int overviewgappo           = 50;   /* overview时 窗口与窗口 缝隙大小 */
+static const int showbar                 = 1;    /* 是否显示状态栏 */
+static const int topbar                  = 1;    /* 指定状态栏位置 0底部 1顶部 */
+static const float mfact                 = 0.6;  /* 主工作区 大小比例 */
+static const int   nmaster               = 1;    /* 主工作区 窗口数量 */
+static const unsigned int snap           = 10;   /* 边缘依附宽度 */
+static const unsigned int baralpha       = 0xc0; /* 状态栏透明度 */
+static const unsigned int borderalpha    = 0xdd; /* 边框透明度 */
 static const char *fonts[]               = { "SauceCodePro Nerd Font:size=16", "monospace:size=15" };
 static const char *colors[][3]           = {          /* 颜色设置 ColFg, ColBg, ColBorder */ 
     [SchemeNorm] = { "#bbbbbb", "#333333", "#444444" },
@@ -75,24 +75,25 @@ static const char *tagsel[][2] = {
 static const unsigned int tagalpha[] = { OPAQUE, baralpha };
 
 static const Rule rules[] = {
-    /* class                 instance              title             tags mask     isfloating  isglobal    isnoborder monitor */
     // { NULL,                 "wechat.exe",          NULL,             1 << 9,       0,          0,          0,        -1 },
-    // { NULL,                 "wxwork.exe",          NULL,             1 << 10,      0,          0,          0,        -1 },
-    {"obs",                  NULL,                 NULL,             1 << 8,       0,          0,          0,        -1 },
-    {"chrome",               NULL,                 NULL,             1 << 9,       0,          0,          0,        -1 },
-    {"Chromium",             NULL,                 NULL,             1 << 9,       0,          0,          0,        -1 },
-    {"music",                NULL,                 NULL,             1 << 10,      1,          0,          1,        -1 },
-    { NULL,                 "qq",                  NULL,             1 << 11,       0,          0,          1,        -1 },
-    { NULL,                  NULL,                "broken",          0,            1,          0,          0,        -1 },
-    { "图片查看",           "图片查看",           "图片查看",        0,            1,          0,          0,        -1 },
-    { "图片预览",           "图片预览",           "图片预览",        0,            1,          0,          0,        -1 },
-    { NULL,                  NULL,                "crx_",            0,            1,          0,          0,        -1 },
-    {"flameshot",            NULL,                 NULL,             0,            1,          0,          0,        -1 },
-    {"wemeetapp",            NULL,                 NULL,             TAGMASK,      1,          0,          0,        -1 }, // 腾讯会议在切换tag时有诡异bug导致退出 变成global来规避该问题
-    {"peek",                 NULL,                 NULL,             TAGMASK,      1,          0,          0,        -1 }, 
-    {"float",                NULL,                 NULL,             0,            1,          0,          0,        -1 }, // 特殊class client默认浮动
-    {"noborder",             NULL,                 NULL,             0,            1,          0,          1,        -1 }, // 特殊class client默认无边框
-    {"global",               NULL,                 NULL,             TAGMASK,      1,          1,          0,        -1 }, // 特殊class client全局于所有tag
+    // { NULL,                 "wxwork.exe",          NULL,             1 << 10,      0,          0,          0,        -1 }
+/*   class,instance,title,tags,mask,isfloating,isglobal,isnoborder,monitor */
+// 腾讯会议在切换tag时有诡异bug导致退出 变成global来规避该问题
+    {"obs"       , NULL       , NULL       , 1 << 8  , 0 , 0 , 0 , -1 } ,
+    {"chrome"    , NULL       , NULL       , 1 << 9  , 0 , 0 , 0 , -1 } ,
+    {"Chromium"  , NULL       , NULL       , 1 << 9  , 0 , 0 , 0 , -1 } ,
+    {"music"     , NULL       , NULL       , 1 << 10 , 1 , 0 , 1 , -1 } ,
+    { NULL       , "qq"       , NULL       , 1 << 11 , 0 , 0 , 1 , -1 } ,
+    { NULL       , NULL       , "broken"   , 0       , 1 , 0 , 0 , -1 } ,
+    { NULL       , NULL       , "crx_"     , 0       , 1 , 0 , 0 , -1 } ,
+    {"flameshot" , NULL       , NULL       , 0       , 1 , 0 , 0 , -1 } ,
+    {"wemeetapp" , NULL       , NULL       , TAGMASK , 1 , 0 , 0 , -1 } , 
+    {"peek"      , NULL       , NULL       , TAGMASK , 1 , 1 , 0 , -1 } ,
+    {"float"     , NULL       , NULL       , 0       , 1 , 0 , 0 , -1 } , // 特殊class client默认浮动
+    {"noborder"  , NULL       , NULL       , 0       , 1 , 0 , 1 , -1 } , // 特殊class client默认无边框
+    {"global"    , NULL       , NULL       , TAGMASK , 1 , 1 , 0 , -1 } , // 特殊class client全局于所有tag
+    {"图片查看"   ,"图片查看"    ,"图片查看"   , 0       , 1 , 0 , 0 , -1 } ,
+    {"图片预览"   ,"图片预览"    ,"图片预览"   , 0       , 1 , 0 , 0 , -1 } ,
 };
 static const char *overviewtag = "OVERVIEW";
 static const Layout overviewlayout = { "舘",  overview };
@@ -180,10 +181,15 @@ static Key keys[] = {
     { MODKEY,              XK_k,               spawn, SHCMD("~/scripts/blurlock.sh") },                                  /* super k          | 锁定屏幕               */
     { MODKEY|ShiftMask,    XK_Up,              spawn, SHCMD("~/scripts/set_vol.sh up") },                                /* super shift up   | 音量加                 */
     { MODKEY|ShiftMask,    XK_Down,            spawn, SHCMD("~/scripts/set_vol.sh down") },                              /* super shift down | 音量减                 */
-    { MODKEY|ControlMask,    XK_s,               spawn, SHCMD("flameshot gui -c -p ~/Pictures/screenshots") },             /* super control s    | 截图                   */
+    { MODKEY|ControlMask,   XK_s,               spawn, SHCMD("flameshot gui -c -p ~/Pictures/screenshots") },             /* super control s    | 截图                   */
+    { MODKEY|ShiftMask,    XK_k,               spawn, SHCMD("~/scripts/screenkey.sh") },                                 /* super shift k    | 打开键盘输入显示       */
+    { MODKEY,              XK_e,               spawn, SHCMD("eww open eww") },                                 /* super shift k    | 打开键盘输入显示       */
+    { MODKEY|ShiftMask,    XK_e,               spawn, SHCMD("eww close eww") },                                 /* super shift k    | 打开键盘输入显示       */
     { MODKEY|ShiftMask,    XK_k,               spawn, SHCMD("~/scripts/screenkey.sh") },                                 /* super shift k    | 打开键盘输入显示       */
     { MODKEY|ShiftMask,    XK_q,               spawn, SHCMD("kill -9 $(xprop | grep _NET_WM_PID | awk '{print $3}')") }, /* super shift q    | 选中某个窗口并强制kill */
     { ShiftMask|ControlMask, XK_c,             spawn, SHCMD("xclip -o | xclip -selection c") },                          /* super shift c    | 进阶复制               */
+
+
 
     /* super key : 跳转到对应tag (可附加一条命令 若目标目录无窗口，则执行该命令) */
     /* super shift key : 将聚焦窗口移动到对应tag */

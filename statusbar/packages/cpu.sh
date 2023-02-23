@@ -4,12 +4,12 @@
 source ~/.profile
 
 this=_cpu
-icon_color="^c#3E206F^^b#6E51760x88^"
-text_color="^c#3E206F^^b#6E51760x99^"
+icon_color="^c#3B001B^^b#6873790x88^"
+text_color="^c#3B001B^^b#6873790x99^"
 signal=$(echo "^s$this^" | sed 's/_//')
 
 update() {
-    cpu_icon="閭"
+    cpu_icon=""
     cpu_text=$(top -n 1 -b | sed -n '3p' | awk '{printf "%02d%", 100 - $8}')
 
 	# tempturature show
@@ -24,7 +24,7 @@ update() {
 }
 
 notify() {
-    notify-send "閭 CPU tops" "\n$(ps axch -o cmd:15,%cpu --sort=-%cpu | head)\\n\\n(100% per core)" -r 9527
+    notify-send " CPU tops" "\n$(ps axch -o cmd:15,%cpu --sort=-%cpu | head)\\n\\n(100% per core)" -r 9527
 }
 
 call_btop() {
